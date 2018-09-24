@@ -14,7 +14,7 @@
     - 靶机名称：**windowscookie**(cn_windows_10_enterprise_x64_dvd_6846957.iso)
     - 网关名称：**ubuntucookie**（ubuntu-18.04-live-server-amd64.iso）
     - 攻击者主机名称：**kalicookie**(kali-linux-2018.3-amd64.iso)
-        ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE63b80a3854964896ceda901f6eefcefa/21266)
+
 - 三台虚拟机网络配置：
     - 靶机：
         ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEea5cafb7bab8ede30bb3fa992823c0c8/21264)
@@ -28,7 +28,7 @@
         ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE1cbc6d32d7426ce108a518f008fc8443/21228)
 - 最终网络拓扑图：
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE9fe3ea2b18e121120b5b5b98a26c0b75/21474)
-- 三台主机增强功能配置：均未配置（==实验问题一==）
+- 三台主机增强功能配置：均未配置（实验问题一）
 #### 三. 实验过程
 1. 靶机ping攻击者：
     - 实验原理：靶机与网关处于同一内网，网关与攻击者处于同一外网；靶机发送给攻击者的数据包通过网关转发给攻击者。
@@ -39,11 +39,11 @@
     ```
 
     - 实验过程：
-        - 根据实验原理可以实现靶机ping攻击者，但是实际实验过程中发现靶机ping攻击者不通问题（==实验问题二==）。此时监听一下经过网关的流量发现网关没有将经过内网的流量通过外网传递出去。
+        - 根据实验原理可以实现靶机ping攻击者，但是实际实验过程中发现靶机ping攻击者不通问题（实验问题二）。此时监听一下经过网关的流量发现网关没有将经过内网的流量通过外网传递出去。
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE1668853cd5938236df360fbdb7b6471c/21089)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE397d94c8a266bb4db02a10f13b47b246/21099)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/F92D20AE69B746F88026A1CD7CE9AC9A/21344)
-        - ==解决实验问题二== : 开启网关IPV4转发功能，保存，将修改写入防火墙
+        - 解决实验问题二: 开启网关IPV4转发功能，保存，将修改写入防火墙
             - 出于安全考虑，Linux系统默认是禁止数据包转发的。所谓转发即当主机拥有多于一块的网卡时，其中一块收到数据包，根据数据包的目的ip地址将数据包发往本机另一块网卡，该网卡根据路由表继续发送数据包。这通常是路由器所要实现的功能。
 
             -  检查：检查/proc下的文件发现ipv4转发没有开启 (值为 0)：
@@ -56,7 +56,7 @@
                 ```
                     sysctl -w net.ipv4.ip_forward=1
                 ```
-                ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE9d15f997e5446d248fd0c4adcd04a05c/21063)
+
             - 再次检查：：ipv4转发开启 (值为 1)：
                 ```
                     cat /proc/sys/net/ipv4/ip_forward 
@@ -68,8 +68,8 @@
                 ```
                 ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE44b97820769a95ba071472feaad6a27e/21086)
             
-        - 开启网关IPV4转发后靶机依然ping不通攻击者，此时监听一下经过网关的流量，发现实验问题3解决后，网关可以将经过内网的流量通过外网传递出去，但是进一步监听经过攻击者的流量，发现攻击者虽然回复了request，但是回复的目的地址直接是靶机的IP地址，而攻击者和靶机处于不同网段，无法直接实现包转发（==实验问题三==）
-        - ==解决实验问题三==：配置防火墙并保存配置
+        - 开启网关IPV4转发后靶机依然ping不通攻击者，此时监听一下经过网关的流量，发现实验问题3解决后，网关可以将经过内网的流量通过外网传递出去，但是进一步监听经过攻击者的流量，发现攻击者虽然回复了request，但是回复的目的地址直接是靶机的IP地址，而攻击者和靶机处于不同网段，无法直接实现包转发（实验问题三）
+        - 解决实验问题三：配置防火墙并保存配置
 
             ```
                 iptables -t nat -A POSTROUTING -s 192.168.68.0/24 -o enp0s3 -j MASQUERADE
@@ -96,6 +96,7 @@
 - [x] 靶机可以直接访问攻击者主机
     - 由前文实验过程可知
 - [x] 攻击者主机无法直接访问靶机
+
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEc3339ce9bffc513436a8f49f01a597bd/21214)
 - [x] 网关可以直接访问攻击者主机和靶机
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEe077ae7f7f459660a4a8b739bf40966e/21384)
@@ -132,7 +133,7 @@
     >- -s:制定数据包的源地址， IP hostname
     >- SNAT：源 NAT，解决私网用户用同一个公网 IP 上网的问题。
 MASQUERADE：是 SNAT 的一种特殊形式，适用于动态的、临时会变的 IP 上。
-- ==实验问题一（未解决）==：kali上安装增强功能问题：
+- 实验问题一（未解决）：kali上安装增强功能问题：
     - 自动安装失败
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE042e0d9065f27df0ac1a9b4cd2e98b0b/21439)
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE954e80a7762ef70882b51cfff86c3415/21438)
