@@ -24,22 +24,15 @@
         ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE5734715993566ee575fba68027827976/21262)
     - 网关：
         ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEcdc6b833a3a5d35685df54424a2c4a14/21265)
-        ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEecb05535cb300ddfeb0532c8aa45a14e/21230)
         ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE1cbc6d32d7426ce108a518f008fc8443/21228)
 - 最终网络拓扑图：
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE9fe3ea2b18e121120b5b5b98a26c0b75/21474)
-- 三台主机增强功能配置：均未配置（实验问题一）
+- 三台主机增强功能：均配置（实验问题一）
 #### 三. 实验过程
 1. 靶机ping攻击者：
     - 实验原理：靶机与网关处于同一内网，网关与攻击者处于同一外网；靶机发送给攻击者的数据包通过网关转发给攻击者。
-    ```
-    graph LR 
-    靶机-->网关
-    网关-->攻击者
-    ```
-
     - 实验过程：
-        - 根据实验原理可以实现靶机ping攻击者，但是实际实验过程中发现靶机ping攻击者不通问题（实验问题二）。此时监听一下经过网关的流量发现网关没有将经过内网的流量通过外网传递出去。
+        - 根据实验原理可以实现靶机ping攻击者，但是实际实验过程中发现靶机ping攻击者不通问题（实验问题二）。此时监听一下经过网关的流量发现网关没有将经过内网网卡（enp0s8)的流量通过外网网卡（enp0s3)传递出去。
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE1668853cd5938236df360fbdb7b6471c/21089)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE397d94c8a266bb4db02a10f13b47b246/21099)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/F92D20AE69B746F88026A1CD7CE9AC9A/21344)
@@ -68,7 +61,7 @@
                 ```
                 ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE44b97820769a95ba071472feaad6a27e/21086)
             
-        - 开启网关IPV4转发后靶机依然ping不通攻击者，此时监听一下经过网关的流量，发现实验问题3解决后，网关可以将经过内网的流量通过外网传递出去，但是进一步监听经过攻击者的流量，发现攻击者虽然回复了request，但是回复的目的地址直接是靶机的IP地址，而攻击者和靶机处于不同网段，无法直接实现包转发（实验问题三）
+        - 开启网关IPV4转发后靶机依然ping不通攻击者，此时监听一下经过网关的流量，发现实验问题二解决后，网关可以将经过内网的流量通过外网传递出去，但是进一步监听经过攻击者的流量，发现攻击者虽然回复了request，但是回复的目的地址直接是靶机的IP地址，而攻击者和靶机处于不同网段，无法直接实现包转发（实验问题三）
         - 解决实验问题三：配置防火墙并保存配置
 
             ```
@@ -78,11 +71,11 @@
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE2695c9def6734864e294aa8b3aef5d72/21206)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE6168eb6a834b2a4259591c205471144d/21318)
             ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE28e7945d789ec38fde4e27728e313f09/21220)
-        - 再次使靶机ping攻击者，发现可以ping通，并监听经过网关内外网卡的流量； 打开attacker,gateway监听:
+        - 再次使靶机ping攻击者，发现可以ping通； 打开attacker,gateway监听
             - gateway监听：
                 ```
                 tcpdump -n -i enp0s8 icmp
-                tcpdump -n -i enp0s8 icmp
+                tcpdump -n -i enp0s3 icmp
                 ```
             - attacker监听：
     
@@ -113,9 +106,9 @@
     ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE2f8ab32c85f4ce9b907e16757a16eb78/21482)
     
 ### 五. 实验总结
-- Virtualbox的一个高级功能——==多重加载==，他不仅可以有多个加载点，而且还可以将虚拟镜像文件和加载点文件复制到其他电脑里直接创建一个虚拟机（前提是那台机器也安装了virtualbox），不用再一次安装系统。
+- Virtualbox的一个高级功能——多重加载，他不仅可以有多个加载点，而且还可以将虚拟镜像文件和加载点文件复制到其他电脑里直接创建一个虚拟机（前提是那台机器也安装了virtualbox），不用再一次安装系统。
 - Tcpdump 的用法：
-    - 以数字显示主机及端口：==tcpdump -n==（协议的关键字，主要包括fddi,ip,arp,rarp,tcp,udp等类型。Fddi指明是在FDDI(分布式光纤数据接口网络)上的特定 的网络协议，实际上它是"ether"的别名，fddi和ether具有类似的源地址和目的地址，所以可以将fddi协议包当作ether的包进行处理和 分析。其他的几个关键字就是指明了监听的包的协议内容。如果没有指定任何协议，则tcpdump将会监听所有协议的信息包。）
+    - 以数字显示主机及端口：tcpdump -n（协议的关键字，主要包括fddi,ip,arp,rarp,tcp,udp等类型。Fddi指明是在FDDI(分布式光纤数据接口网络)上的特定 的网络协议，实际上它是"ether"的别名，fddi和ether具有类似的源地址和目的地址，所以可以将fddi协议包当作ether的包进行处理和 分析。其他的几个关键字就是指明了监听的包的协议内容。如果没有指定任何协议，则tcpdump将会监听所有协议的信息包。）
 
 - 在Gateway中使用iptables配置转发规则并保存
     [参考链接1](https://www.cnblogs.com/frankb/p/7427944.html)    [参考链接2](https://blog.csdn.net/xftony/article/details/80584251)
@@ -133,14 +126,8 @@
     >- -s:制定数据包的源地址， IP hostname
     >- SNAT：源 NAT，解决私网用户用同一个公网 IP 上网的问题。
 MASQUERADE：是 SNAT 的一种特殊形式，适用于动态的、临时会变的 IP 上。
-- 实验问题一（未解决）：kali上安装增强功能问题：
-    - 自动安装失败
-    ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE042e0d9065f27df0ac1a9b4cd2e98b0b/21439)
-    ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE954e80a7762ef70882b51cfff86c3415/21438)
-    ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE482b96cfcfee0ab85d11c299d4e26d57/21443)
-    - 手动安装失败
-    ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCE1ef6238a009481ad9e94ec0a56a39c57/21445)
-    ![image](https://note.youdao.com/yws/public/resource/d3d5cd790cd89d5053dea9f779cc7154/xmlnote/WEBRESOURCEbaeae939806f291b71e5ca394c6c8490/21444)
-### 六. 参考实验报告
+- 实验问题一**kali上安装增强功能**：已解决；之前执行`apt update`没有反应，推测是源的问题，这一次更换了源之后再一次执行，成功安装上增强功能。
+    
+## 六. 参考实验报告
 - 2018-NS-Public-[TheMasterOfMagic](https://github.com/CUCCS/2018-NS-Public-TheMasterOfMagic/blob/62f9a992ca432c05c7e11436695f2bd4403ed85d/ns/chap0x01/基于VirtualBox的网络攻防基础环境搭建.md)
     
