@@ -34,10 +34,6 @@ airodump-ng wlan0
 
 ![](monitor-2.jpg)
 
-### 第三步、抓包并保存
-        
-![](monitor-6.jpg)
-
 >   - BSSID:表示无线ap的mac地址。
 >   - PWR:网卡报告的信号水平，信号值越高，说明离ap或者计算机越近。
 >    - Beacons:无线AP发出的通知编号。
@@ -51,6 +47,10 @@ airodump-ng wlan0
 >   -    Lost:在过去10秒钟内丢失的数据分组，基于序列号检测。
 >   -    Frames:客户端发送的数据分组数量。
 >   -    Probe:被客户端查探的ESSID。如果客户端正试图连接一个AP，但是没有连接上，则将会显示到这里。
+
+### 第三步、抓包并保存
+        
+![](monitor-6.jpg)
 
 ### 第四步、分析抓包
     
@@ -376,6 +376,7 @@ ssid.list中mac地址为`ec:89:14:c0:53:ec`的WI-FI名称是以八进制UTF-8格
 1. 当前信号覆盖范围内一共有10个独立的SSID；
 
 ![](capture3.jpg)
+
 2. 在capture.cap中不包含隐藏的SSID，第二次抓包得到capture-01.cap，分析它的ssid2.list,中间包含一个隐藏的SSID，mac地址为：d6:ee:07:4b:45:ed。在Wireshark中找到；
 
 ![](capture4.jpg)
@@ -438,3 +439,7 @@ wlan.fc.type_subtype==0x0008
     - Shared Key：
 通过四次握手并使用WEP加密来完成鉴权。
 - [无线渗透教程1：监听无线网络](https://blog.csdn.net/qq_39536876/article/details/80043542?utm_source=copy )
+## 五、参考实验报告
+- [2018-NS-Public-xaZKX](https://github.com/CUCCS/2018-NS-Public-xaZKX/blob/7d8363f67056310ac1df4186b0210ec5ca2297e1/ms-chap02/chap02-无线接入网监听实验报告.md)
+- [2018-NS-Public-MrCuihi](https://github.com/CUCCS/2018-NS-Public-MrCuihi/blob/master/802.11网络监听实验报告.md)
+- [2018-NS-Public-jckling](https://github.com/CUCCS/2018-NS-Public-jckling/blob/56c7a202aa9c3ab8a38ce402026f6be7a9433ae1/mis-0x02/第二章实验练习题.md)
