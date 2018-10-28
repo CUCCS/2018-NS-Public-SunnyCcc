@@ -1,9 +1,9 @@
 # 一、实验要求
 ## 自己动手编程实现并讲解：
-- [ ] TCP connect scan
-- [ ] TCP stealth scan
-- [ ] TCP XMAS scan
-- [ ] UDP scan
+- [x] TCP connect scan
+- [x] TCP stealth scan
+- [x] TCP XMAS scan
+- [x] UDP scan
 # 二、实验环境
 - 攻击者主机名称：**KaliAttacker**(IP:10.0.2.6)
 - 靶机主机名称：**KaliGateway**(IP:10.0.2.7)
@@ -81,26 +81,28 @@
     ![](xmasscan5.jpg)
 - 无法判断的情况：1、Client发送Flags(FSH,FIN,URG) 2、Server端回复error type为3 、 ICMP code为1, 2, 3, 9, 10, 13的数据包，表明端口被过滤，无法判断端口关闭还是开启
 ## UDP scan
-1. 在**KaliGateway**上打开80端口`nc -ulp 80`,然后执行`tcpdump -i -n eth0 -w udpscan.cap`;在**KaliAttacker**上执行    `udpscan.py`
-
+1. 在**KaliGateway**上打开53端口`nc -ulp 53`,然后执行`tcpdump -i eth0 -w udpscan.cap`;在**KaliAttacker**上执行    `udpscan.py`
+    ![](udpscan4.jpg)
+    ![](udpscan2.jpg) 
     ![](udpscan1.jpg) 
+2. 用Wireshark分析**KaliGateway**上抓到的包`udpscan.cap`
 
-2. 用Wireshark分析**KaliGateway**上抓到的包`xmasscan.cap`
-
-    ![](udpscan2.jpg)
+    ![](udpscan3.jpg)
+    
+    10.0.2.6（**KaliAttacker**）向10.0.2.7（**KaliAttacker**）发送UDP数据包； 10.0.2.6（**KaliAttacker**）向10.0.2.7（**KaliAttacker**）回复UDP数据包说明53端口开启。
 4. 结果分析：
 - 端口开放：1、Client发送UDP packet 2、Server端发送UDP packet 
 
-    ![](udpscan3.jpg)
+    ![](udpscan5.jpg)
 - 端口关闭：1、Client发送UDP packet 2、Server端回复ICMP Error(Type 3 Code 3)
 
-    ![](udpscan4.jpg)
+    ![](udpscan6.jpg)
 - 无法判断的情况：1、Client发送UDP packet 2、Server端回复ICMP Error(Type 3 Code 1，2，9，10，13)
 
-    ![](udpscan5.jpg)
+    ![](udpscan7.jpg)
 - 端口开放或者被过滤：1、Client发送UDP packet 2、Server端无回复
 
-    ![](udpscan6.jpg)
+    ![](udpscan8.jpg)
 # 四、 实验代码
 ## tcpconnectscan. py
 ``` python
