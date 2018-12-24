@@ -20,7 +20,7 @@
   bro -v   # 查看bro版本信息
   ```
 
-  ![1](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/1.jpg)
+  ![1](ns-0x12/1.jpg)
 
 - 配置bro
 
@@ -32,13 +32,13 @@
   @load mytuning.bro
   ```
 
-  ![2](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/2.jpg)
+  ![2](ns-0x12/2.jpg)
 
   2) 在`/etc/bro/site/`目录下创建名为`mytuning.bro`的新文件，写入`redef ignore_checksums = T;`忽略校验和认证。
 
   >原因：通常，Bro的事件引擎将丢弃没有有效校验和的数据包。如果想要在系统上分析本地生成/捕获流量，所有发送/捕获的数据包将具有不良的校验和，因为它们尚未由NIC计算，因此这些数据包将不会在Bro策略脚本中进行分析，所以要设置成忽略校验和验证。
 
-  ![3](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/3.jpg)
+  ![3](ns-0x12/3.jpg)
 
 ## 三、 实验过程
 
@@ -46,7 +46,7 @@
 
 - 下载pcap包：执行命`wget https://sec.cuc.edu.cn/huangwei/textbook/ns/chap0x12/attack-trace.pcap`
 
-![4](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/4.jpg)
+![4](ns-0x12/4.jpg)
 
 - 使用bro自动化分析下载的attack-trace.pcap包
 
@@ -54,19 +54,19 @@
 bro -r attack-trace.pcap /etc/bro/site/local.bro
 ```
 
-![5](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/5.jpg)
+![5](ns-0x12/5.jpg)
 
 ​	出现一个新的文件夹`extract-files`和`conn.log`、`files.log`等日志文件。
 
-![6](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/6.jpg)
+![6](ns-0x12/6.jpg)
 
 - 分析相关文件
 
 进入`extract_files`文件夹，把`extract_files`文件夹里的文件上传至`VirusTotal`网站进行分析，发现匹配了一个历史扫描报告 ，该报告表明这是一个已知的后门程序。
 
-![7](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/7.jpg)
+![7](ns-0x12/7.jpg)
 
-![8](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/8.jpg)
+![8](ns-0x12/8.jpg)
 
 
 
@@ -74,15 +74,15 @@ bro -r attack-trace.pcap /etc/bro/site/local.bro
 
 阅读`usr/share/bro/base/files/extract/main.bro`源代码，可知文件名的最后一部分```FHUsSu3rWdP07eRE4lid```,就是`files.log`文件的文件的唯一标识id
 
-![9](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/9.jpg)
+![9](ns-0x12/9.jpg)
 
 - 查看分析`files.lo`可知，该文件提取自FTP会话，文件名的最后一个-右侧的字符串FHUsSu3rWdP07eRE4l是files.log中文件的唯一标识
 
-![10](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/10.jpg)
+![10](ns-0x12/10.jpg)
 
 - 查看分析`conn.log`，通过conn.log的会话标识匹配,我们发现该PE文件来自于IPv4地址为:98.114.205.102的主机
 
-![11](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/11.jpg)
+![11](ns-0x12/11.jpg)
 
 ## 3.2 Wireshark分析
 
@@ -96,7 +96,7 @@ bro -r attack-trace.pcap /etc/bro/site/local.bro
 tshark -r /root/下载/attack-trace.pcap -z ip_hosts,tree -qn
 ```
 
-![12](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/12.jpg)
+![12](ns-0x12/12.jpg)
 
 - 查看攻击者
 
@@ -107,11 +107,11 @@ tshark -r /root/下载/attack-trace.pcap -z ip_hosts,tree -qn
 tshark -r attack-trace.pcap -R "tcp.flags==0x02" -n
 ```
 
-![13](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/13.jpg)
+![13](ns-0x12/13.jpg)
 
 - 查询攻击者IP地址
 
-![14](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/14.jpg)
+![14](ns-0x12/14.jpg)
 
 - 查看攻击持续时间
 
@@ -121,7 +121,7 @@ tshark -r attack-trace.pcap -R "tcp.flags==0x02" -n
 capinfos attack-trace.pcap
 ```
 
-![15](/Users/cookie/Documents/GitHub/2018-NS-Public-SunnyCcc/ns-0x12/15.jpg)
+![15](ns-0x12/15.jpg)
 
 
 
